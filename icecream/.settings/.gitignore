@@ -1,0 +1,6 @@
+/org.eclipse.core.resources.prefs
+/org.eclipse.jdt.core.prefs
+/bin/
+.project
+.classpath
+org.eclipse.cord.resources.pref
