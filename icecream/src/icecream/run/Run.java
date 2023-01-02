@@ -11,6 +11,7 @@ import icecream.model.event.Event;
 import icecream.model.preproduct.Preproduct;
 import icecream.model.product.icecake.Icecake;
 import icecream.model.product.icecream.Icecream;
+import icecream.model.sell.Sell;
 import icecream.view.View;
 
 public class Run {
@@ -27,7 +28,19 @@ public class Run {
 			// 메인메뉴 출력후 숫자 입력받음 1. 판매 2. 재고관리 3. 이벤트 확인 4. 고객관리 5.관리자메뉴
 			int choice = iView.Mainmenu();
 			switch(choice) {
-			case 1 : break;
+			case 1 :
+				choice = iView.sellMenu();
+				switch(choice) {
+				case 1 : 
+					Sell sell = iView.sellProduct();
+					sell = iCon.sellProduct(sell);
+					iView.checkSell(sell);
+					break; 
+				case 2 : 
+					break;
+				default : 
+				}
+				break;
 			case 2 : 
 				iView.showallPre(iCon.showAllPre());
 				preproduct = iView.updatePreMenu();
@@ -128,6 +141,7 @@ public class Run {
 							 break;				 
 						 default : System.out.println("1~9사이값 입력");
 						 }
+						 break;
 					 //멤버 등급 변경 삭제
 					 case 2 : 
 						 cList = iCon.SelectAll();

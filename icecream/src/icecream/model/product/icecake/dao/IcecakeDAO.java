@@ -96,4 +96,34 @@ public class IcecakeDAO {
 		return iList;
 	}
 	
+	/**
+	 * 코드 입력받고 해당하는 코드 이름 가격 icecake에 담아 리턴
+	 * @param code
+	 * @return Icecake icecake
+	 */
+	public Icecake oneSelect(int code) {
+		Icecake icecake = null;
+		try {
+			Class.forName(DRIVER);
+			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			String sql = "SELECT * FROM SAL_PRODUCT_TBL WHERE PRODUCT_CODE = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, code);
+			ResultSet rset = pstmt.executeQuery();
+			icecake = new Icecake();
+			if(rset.next()) {
+				icecake.setProductCode(rset.getInt("PRODUCT_CODE"));
+				icecake.setProductName(rset.getString("PRODUCT_NAME"));
+				icecake.setProductPrice(rset.getInt("PRODUCT_PRICE"));
+			}
+			pstmt.close();
+			conn.close();
+			rset.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return icecake;
+	}
 }

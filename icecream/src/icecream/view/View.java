@@ -10,6 +10,7 @@ import icecream.model.event.Event;
 import icecream.model.preproduct.Preproduct;
 import icecream.model.product.icecake.Icecake;
 import icecream.model.product.icecream.Icecream;
+import icecream.model.sell.Sell;
 
 public class View {
 	
@@ -415,6 +416,65 @@ public class View {
 		preproduct.setProuductCode(code);
 		preproduct.setAmount(amount);
 		return preproduct;
+	}
+
+	public int sellMenu() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("=== 판매 메뉴 ===");
+		System.out.println("1. 단품 판매");
+		System.out.println("2. 아이스크림 판매");
+		System.out.print(">>");
+		int result = sc.nextInt();
+		return result;
+	}
+	
+	public Sell sellProduct() {
+		Scanner sc = new Scanner(System.in);
+		Sell sell = new Sell();
+		System.out.println("=== 단품판매 ===");
+		System.out.print("판매 할 제품 코드 : ");
+		int procode = sc.nextInt();
+		sell.setProductCode(procode);
+		System.out.print("고객 코드 : ");
+		int cuscode = sc.nextInt();
+		sell.setCustomerCode(cuscode);
+		EXIT :
+		do {			
+			System.out.print("증정품 개수 : ");
+			int index = sc.nextInt();
+			sell.setPreKinds(index);	
+			if(index > 0) {
+				for(int i = 0; i < index; i++) {
+					System.out.println(i+1 + "번째 증정품");
+					System.out.print("증정할 상품 코드 : ");
+					int precode = sc.nextInt();
+					System.out.print("양 : ");			
+					int amount = sc.nextInt();
+					sell.setPrepros(precode, amount);
+					System.out.println("=== 현재 증정품 ===");
+					for(int j = 0; j <= i ; j++) {
+						Preproduct prepro = sell.getPrepro(j);
+						System.out.print(j+1+"번째 코드 : " + prepro.getProuductCode() + ", ");
+						System.out.println("개수 : " + prepro.getAmount());
+					}
+				}
+				System.out.print("입력하신 증정품 정보가 맞습니까?(Y,N) : ");
+				String is = sc.next();
+				if(is.equals("Y")) {
+					break EXIT;
+				}
+				else sell.initprepros();
+			}else if(index == 0) break EXIT;
+		}while(true);
+		return sell;
+	}
+	
+	public void checkSell(Sell sell) {
+		System.out.println("제품명 : " + sell.getProductName());		
+		System.out.println("가격 : " + sell.getProductPrice());		
+		System.out.println("고객 이름 : " + sell.getCustomerName());		
+		System.out.println("고객 코드 : " + sell.getCustomerCode());	
+		System.out.println("적립 될 포인트 : " + sell.getBonus());		
 	}
 }
 

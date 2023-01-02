@@ -9,6 +9,7 @@ public class Customer {
 	private int point;
 	private Date enterDate;
 	private Date finalDate;
+	private int bonus;
 	
 	public Customer() {}
 	
@@ -23,6 +24,15 @@ public class Customer {
 	}
 	
 	
+	
+	public int getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(int bonus) {
+		this.bonus = bonus;
+	}
+
 	public int getMemberCode() {
 		return memberCode;
 	}

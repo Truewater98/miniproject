@@ -126,4 +126,31 @@ public class PreproductDAO {
 		}
 		return result;
 	}
+	
+	public int minusAmount(int index, Preproduct[] prepros) {
+		int result = 0;
+		if(index > 0) {
+			try {
+				Class.forName(DRIVER);
+				Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				String sql = "UPDATE PRE_PRODUCT_TBL SET AMOUNT = AMOUNT - ? WHERE PRODUCT_CODE = ?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				for(int i = 0; i < index; i++) {
+					pstmt.setInt(1, prepros[i].getAmount());
+					pstmt.setInt(2, prepros[i].getProuductCode());		
+					result = pstmt.executeUpdate();
+					if(result == 0) {
+						break;
+					}
+				}
+				conn.close();
+				pstmt.close();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}			
+		}
+		return result;
+	}
 }

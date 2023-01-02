@@ -11,10 +11,12 @@ import icecream.model.event.Event;
 import icecream.model.event.dao.EventDAO;
 import icecream.model.preproduct.Preproduct;
 import icecream.model.preproduct.dao.PreproductDAO;
+import icecream.model.product.dao.ProductDAO;
 import icecream.model.product.icecake.Icecake;
 import icecream.model.product.icecake.dao.IcecakeDAO;
 import icecream.model.product.icecream.Icecream;
 import icecream.model.product.icecream.dao.IcecreamDAO;
+import icecream.model.sell.Sell;
 
 public class Controller {
 	
@@ -217,5 +219,29 @@ public class Controller {
 		PreproductDAO pDao = new PreproductDAO();
 		int result = pDao.updateAmount(preproduct);
 		return result;
+	}
+	
+	public Sell sellProduct(Sell sell) {
+		CustomerDAO cDao = new CustomerDAO();
+		IcecakeDAO iDao = new IcecakeDAO();
+		PreproductDAO prDao = new PreproductDAO();
+		int procode = sell.getProductCode();
+		Icecake icecake = iDao.oneSelect(procode);
+		sell.setProductName(icecake.getProductName());
+		sell.setProductPrice(icecake.getProductPrice());
+		int cuscode = sell.getCustomerCode();
+		Customer customer = cDao.selectOne(cuscode);
+		sell.setCustomerName(customer.getMemberName());
+		sell.setBonus(customer.getBonus());
+		int bonus = customer.getBonus();
+		int price = icecake.getProductPrice();
+		int point = (int)((price * (bonus / 100f)));
+		int result = cDao.plusPoint(sell.getCustomerCode(), point);
+		int index = sell.getPreKinds();
+		Preproduct[] prepros = sell.getPrepros();
+		int result2 = prDao.minusAmount(index, prepros);
+		sell.setSucAmount(result != 0 && result2 != 0);
+		sell.setBonus((int)(price * (bonus / 100f)));
+		return sell;
 	}
 }

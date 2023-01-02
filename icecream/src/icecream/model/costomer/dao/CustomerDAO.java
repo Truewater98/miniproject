@@ -101,7 +101,7 @@ public class CustomerDAO {
 		try {
 			Class.forName(DRIVER);
 			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			String sql = "SELECT MEMBER_CODE, MEMBER_NAME, MEMBERSHIP_NAME, POINT, ENTER_DATE, FINAL_DATE "
+			String sql = "SELECT MEMBER_CODE, MEMBER_NAME, MEMBERSHIP_NAME, POINT, ENTER_DATE, FINAL_DATE, MEMBERSHIP_BONUS "
 					+ "FROM CUSTOMER_TBL JOIN MEMBERSHIP_TBL ON MEMBER_LEVEL = MEMBERSHIP_LEVEL "
 					+ "WHERE MEMBER_CODE = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -113,9 +113,9 @@ public class CustomerDAO {
 				customer.setMemberName(rset.getString("MEMBER_NAME"));
 				customer.setMembershipName(rset.getString("MEMBERSHIP_NAME"));
 				customer.setPoint(rset.getInt("POINT"));
+				customer.setBonus(rset.getInt("MEMBERSHIP_BONUS"));
 				customer.setEnter_date(rset.getDate("ENTER_DATE"));
 				customer.setFinal_date(rset.getDate("FINAL_DATE"));
-				System.out.println(1);
 			}
 			conn.close();
 			pstmt.close();
@@ -192,6 +192,26 @@ public class CustomerDAO {
 			pstmt.setInt(1, array[0]);
 			pstmt.setInt(2, array[1]);
 			result = pstmt.executeUpdate();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public int plusPoint(int code, int point) {
+		int result = 0;		
+		try {
+			Class.forName(DRIVER);
+			Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			String sql = "UPDATE CUSTOMER_TBL SET POINT = POINT + ? WHERE MEMBER_CODE = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, point);
+			pstmt.setInt(2,code);
+			result = pstmt.executeUpdate();
+			conn.close();
+			pstmt.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
